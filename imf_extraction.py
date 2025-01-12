@@ -9,6 +9,7 @@ layers=["List of your model layers"] # e.g. layers=['conv1','conv2','conv3','con
 batch_size = 100
 
 for c in range(num_classes)
+  c = str(c)
   input_image_4D, num_samples = loadtrain(c)
   model=loadmodel()
   # Slice input_image_4D to get the batch
@@ -42,6 +43,7 @@ def get_activation(name):
 batch_size = 100
 
 for c in range(num_classes)
+  c = str(c)
   input_image_4D, num_samples = loadtrain(c)
   if 'activation_All' in globals():
     del activation_All
