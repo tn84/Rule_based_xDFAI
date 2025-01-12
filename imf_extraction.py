@@ -90,7 +90,6 @@ for i, layer in enumerate(layers):
   
   # If the layers are convolutions (we have had 5 convolution layers)
   if 0<=i<=6:
-    # np.shape(Feature_map_values)[x] needs to be repeated according to the number of parts in each class
     Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[3],np.shape(Feature_map_values)[4],np.shape(Feature_map_values)[2]))
   else:
     Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[2]))
