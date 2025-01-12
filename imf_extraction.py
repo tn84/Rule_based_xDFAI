@@ -60,40 +60,45 @@ for c in range(num_classes)
 ## Extract activation for each layer across all training images
 ### Extract dictionary
 def get_activation(name):
-  def hook(model, input, output):
-      activation_All[name] = input[0].detach()
-  return hook
+    def hook(model, input, output):
+        activation_All[name] = input[0].detach()
+    return hook
+
 
 for c in range(num_classes)
-input_image_4D, num_samples = loadtrain(c)
-if 'activation_All' in globals():
-  del activation_All
-  activation_All={}
-  
-for start_index in range(0, num_samples, batch_size):
-  part = 1
-  end_index = min(start_index + batch_size, num_samples)
-  input_image_4D_batch = input_image_4D[start_index:end_index]
 
-  for i in range(input_image_4D_batch.shape[0]):
-    model=loadmodel()
-    for name, layer in model.named_modules():
-      final_name= str(i+start_index) + "_" + name
-      layer.register_forward_hook(get_activation(final_name))
-    output_of_layer = model(input_image_4D_batch[i].unsqueeze(0))
-  print("End part:",part)
+  input_image_4D, num_samples = loadtrain(c)
 
-  
-for i, layer in enumerate(layers):
-  Feature_map_values = [value.cpu().numpy() for key, value in activation_All.items() if key.endswith(layer)]
-  Feature_map_values = np.array(Feature_map_values)
-  
-  # If the layers are convolutions (we have had 5 convolution layers)
-  if 0<=i<=6:
-    Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[3],np.shape(Feature_map_values)[4],np.shape(Feature_map_values)[2]))
-  else:
-    Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[2]))
-  np.save('Results/Model-'+c+'/Activation/batches/Activation_'+layer+'_part'+str(part)+'.npy', Feature_map_values)
-  print(layer,np.shape(Feature_map_values))
-  del Feature_map_values
-del activation_All, output_of_layer, input_image_4D_batch
+  for start_index in range(0, num_samples, batch_size):
+    if 'activation_All' in globals():
+      del activation_All
+      activation_All = {}
+    part = 1
+    end_index = min(start_index + batch_size, num_samples)
+    input_image_4D_batch = input_image_4D[start_index:end_index]
+
+    for i in range(input_image_4D_batch.shape[0]):
+      model=loadmodel()
+      for name, layer in model.named_modules():
+        final_name= str(i+start_index) + "_" + name
+        layer.register_forward_hook(get_activation(final_name))
+      output_of_layer = model(input_image_4D_batch[i].unsqueeze(0))
+
+    # torch.save(activation_All, "Results/Model-"+c+"/Activation/Activation_part"+str(part)+".pt")
+    print("End part:",part)
+
+  # Extract activation for each layer across all training images
+
+    for i,layer in enumerate(layers):
+      Feature_map_values = [value.cpu().numpy() for key, value in activation_All.items() if key.endswith(layer)]
+      Feature_map_values = np.array(Feature_map_values)
+      # If the layers are convolutions (we have had 5 convolution layers)
+      if 0<=i<=6:
+        Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[3],np.shape(Feature_map_values)[4],np.shape(Feature_map_values)[2]))
+      else:
+        Feature_map_values = Feature_map_values.reshape((np.shape(Feature_map_values)[1],np.shape(Feature_map_values)[0],np.shape(Feature_map_values)[2]))
+      np.save('Results/Model-'+c+'/Activation/batches/Activation_'+layer+'_part'+str(part)+'.npy', Feature_map_values)
+      print(layer,np.shape(Feature_map_values))
+      del Feature_map_values
+
+  del activation_All output_of_layer, input_image_4D_batch
