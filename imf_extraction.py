@@ -1,4 +1,4 @@
-# Trace Detection
+# extract important features and activation values
 
 ## Find important features
 
