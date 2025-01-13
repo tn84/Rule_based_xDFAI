@@ -1,4 +1,4 @@
-# extract important features and activation values
+# Extract important features and activation values
 
 ## Find important features
 
