@@ -1,0 +1,103 @@
+# Extract the values of all N_top indices overall of all camera models regarding a specific layer for the training dataset
+def train_top_value(layer,c):
+
+  activation_top_value=[]
+  c = str(c)
+  activation = np.load('Results/Model-'+c+'/Activation/Activation_'+layer+'.npy') # shape of activation: (images, h, w, ch) or (images, i)
+
+
+  if shap_type =='none':
+    if layer in layers_conv:
+      activation = np.transpose(activation, (0, 3, 1, 2))
+      for idx in shap_top_indices:
+        temp1=[]
+        for image in range(activation.shape[0]):
+          value=activation[image][idx[0]][idx[1]][idx[2]]
+          temp1.append(value)
+        activation_top_value.append(temp1)
+
+    else:
+      for idx in shap_top_indices:
+        temp1=[]
+        for image in range(activation.shape[0]):
+          value=activation[image][idx]
+          temp1.append(value)
+        activation_top_value.append(temp1)
+
+  elif shap_type =='ch':
+    if layer in layers_conv:
+      activation = np.transpose(activation, (0, 3, 1, 2))
+      activation = np.mean(activation,axis=1) # (images, h, w)
+      for idx in shap_top_indices:
+        temp1=[]
+        for image in range(activation.shape[0]):
+          value=activation[image][idx[0]][idx[1]]
+          temp1.append(value)
+        activation_top_value.append(temp1)
+
+    else:
+      for idx in shap_top_indices:
+        temp1=[]
+        for image in range(activation.shape[0]):
+          value=activation[image][idx]
+          temp1.append(value)
+        activation_top_value.append(temp1)
+
+
+  del activation
+  print("Activation top values of all training images:", np.shape(activation_top_value))
+  return activation_top_value
+
+
+
+#################################################
+
+# Extract the values of all N_top indices overall of all camera models regarding a specific layer for the test sample
+def test_top_value(layer,dir):
+  test_top_value = []
+
+  test_activation = np.load(dir) # (1, test samples, h, w, ch)
+
+  if shap_type=='none':
+    if layer in layers_conv:
+      test_activation = np.transpose(test_activation[0], (0, 3, 1, 2))
+      for image in range(test_activation.shape[0]):
+        temp1=[]
+        for idx in shap_top_indices:
+          ch, i, j = idx
+          value = test_activation[image][ch][i][j]
+          temp1.append(value)
+        test_top_value.append(temp1)
+
+    else:
+      test_activation=test_activation[0]
+      for image in range(test_activation.shape[0]):
+        temp1=[]
+        for idx in shap_top_indices:
+          value = test_activation[image][idx]
+          temp1.append(value)
+        test_top_value.append(temp1)
+
+
+  elif shap_type=='ch':
+    if layer in layers_conv:
+      test_activation = np.transpose(test_activation[0], (0, 3, 1, 2))
+      test_activation = np.mean(test_activation,axis=1) # (images, h, w)
+      for image in range(test_activation.shape[0]):
+        temp1=[]
+        for idx in shap_top_indices:
+          i, j = idx
+          value = test_activation[image][i][j]
+          temp1.append(value)
+        test_top_value.append(temp1)
+
+    else:
+      test_activation=test_activation[0]
+      for image in range(test_activation.shape[0]):
+        temp1=[]
+        for idx in shap_top_indices:
+          value = test_activation[image][idx]
+          temp1.append(value)
+        test_top_value.append(temp1)
+  print("Activation top values of test samples:", np.shape(test_top_value))
+  return test_top_value
