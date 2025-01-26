@@ -56,8 +56,9 @@ for c in range(num_classes)
     print(layer,np.shape(combined_shap))
   del shap,Grad_shap,Grad_index,combined_shap,combined_index
 
-    
-## Extract activation for each layer across all training images
+################################################################################
+## Extract activation for each layer across all training images:
+
 ### Extract dictionary
 def get_activation(name):
     def hook(model, input, output):
