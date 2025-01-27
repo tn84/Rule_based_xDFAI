@@ -1,3 +1,9 @@
+import numpy as np
+import pickle
+
+From Functions import load_result
+
+
 # Majority Voting
 
 g_TP=0
@@ -65,7 +71,7 @@ For M in Cmodels:
     print("===================================================")
     print("===================================================")
     print("{:<6} {:<15} {:<12}".format("Layer", "Detected Model", "Accuracy"))
-    for l,layer in enumerate(layers):
+    for l, layer in enumerate(layers):
       max = 0
       detectA=''
       for m,model in enumerate(Cmodels):
@@ -148,18 +154,6 @@ For M in Cmodels:
 
  # RuleExtraction
 
-  TP=0
-  TN=0
-  FP=0
-  FN=0
-  Fix=0
-  Detect=0
-  Wrong=0
-  faults_result=[]
-  fault=0
-  all_result = []
-  model_threshold = 4
-
   for i in range(len(ground_truth)):
     count=count+1
     top_models_AB = {}
@@ -224,38 +218,4 @@ For M in Cmodels:
   print("Detect:",Detect)
   print("Sum:",TP+FP+TN+FN)
 
-
-##################################################################
-# Result of RuleExtraction
-
-# with open('Outputs/Test_RuleExtraction1-7.pickle', 'rb') as file:
-#     g_all_result = pickle.load(file)
-
-for sublist in g_all_result:
-    line = ' '.join(str(item) for item in sublist)
-    print(line)
-sum_TP = 0
-sum_FP = 0
-sum_TN = 0
-sum_FN = 0
-sum_Fix = 0
-
-for sublist in g_all_result:
-  sum_TP += sublist[3]
-  sum_Fix += sublist[5]
-  sum_FN += sublist[7]
-  sum_FP += sublist[9]
-  sum_TN += sublist[11]
-
-print("TP:",sum_TP,"Accuracy:",(sum_TP/1350)*100,((sum_TP+sum_TN+sum_Fix)/1350)*100)
-print("FP:",sum_FP,"Accuracy:",(sum_FP/sum_FP+sum_TN)*100)
-print("TN:",sum_TN,"Accuracy:",(sum_TN/sum_FP+sum_TN)*100)
-print("FN:",sum_FN,"Accuracy:",(sum_FN/1313)*100)
-print("Fix:",sum_Fix,"Accuracy:",(sum_Fix/1350)*100)
-print("Sum:",sum_TP+sum_FP+sum_TN+sum_FN)
-for item in FP_result:
-    print(item)
-print("===============================")
-for item in FN_result:
-    print(item)
 
