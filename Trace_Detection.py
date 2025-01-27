@@ -76,6 +76,9 @@ def N_top_func(layer,c):
 # Extracting Traces indices
 
 # Finding top N SHAP indices
+
+
+
 def N_top_indices(layer,N_top_count):
 
   shap_top_value = []
@@ -87,7 +90,7 @@ def N_top_indices(layer,N_top_count):
       temp1=[]
       for image in range(shap.shape[0]): # images numbers in the model
         flattened_list = np.array(shap[image]).flatten()
-        top_indices_flat = np.argsort(-flattened_list)[:N_top]
+        top_indices_flat = np.argsort(-flattened_list)[:N_tops]
         temp1.append(top_indices_flat)
 
       common_indices_flats = reduce(set.intersection, map(set, temp1))
@@ -127,13 +130,13 @@ def N_top_indices(layer,N_top_count):
       common_indices_flats=[]
       temp1=[]
       for image in range(shap.shape[0]): # images numbers in the model
-        indices = np.argsort(-shap[image])[:N_top]
+        indices = np.argsort(-shap[image])[:N_tops]
         temp1.append(indices)
 
       common_indices = reduce(set.intersection, map(set, temp1))
       print(f"The numbers of common indices between all {shap.shape[0]} training images Step-1:",len(common_indices))
 
-      # Check if founded location are not enough
+      # Check if founded locations are not enough
       if len(common_indices) < N_top_count or len(common_indices) < 10:
         c=2
         while len(common_indices) < N_top_count  or len(common_indices) < 10:
@@ -163,7 +166,7 @@ def N_top_indices(layer,N_top_count):
       temp1=[]
       for image in range(shap.shape[0]): # images numbers in the model
         flattened_list = np.array(shap[image]).flatten()
-        top_indices_flat = np.argsort(-flattened_list)[:N_top]
+        top_indices_flat = np.argsort(-flattened_list)[:N_tops]
         temp1.append(top_indices_flat)
 
       common_indices_flats = reduce(set.intersection, map(set, temp1))
@@ -203,7 +206,7 @@ def N_top_indices(layer,N_top_count):
       common_indices_flats=[]
       temp1=[]
       for image in range(shap.shape[0]): # images numbers in the model
-        indices = np.argsort(-shap[image])[:N_top]
+        indices = np.argsort(-shap[image])[:N_tops]
         temp1.append(indices)
 
       common_indices = reduce(set.intersection, map(set, temp1))
