@@ -82,7 +82,9 @@ def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = sigma) -> np.n
     W = W[:im.shape[0], :im.shape[1]]
 
     return W
-  
+    
+##############################################
+
 def loadtest(idx):
   test_dir = 'TEST DIRECTORY PATH'
 
