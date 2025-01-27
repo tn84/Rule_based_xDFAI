@@ -14,6 +14,8 @@ prnu = transforms.Compose([
     transforms.ToTensor(),
 ])
 
+def loadmodel(model_name,class_num):
+    model = model_name(class_num).to(device)
 
 def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = sigma) -> np.ndarray:
     """
