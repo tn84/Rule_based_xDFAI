@@ -1,7 +1,88 @@
 # Generate a specific input image for SHAP explanations from "Test dataset"
 
+import glob
+from PIL import Image
+import torch
+import numpy as np
+import sys
+import pickle
+
+
+prnu = transforms.Compose([
+    transforms.Resize((resize , resize)),
+    transforms.Lambda(noise_extract),
+    transforms.ToTensor(),
+])
+
+
+def noise_extract(im: np.ndarray, levels: int = 4, sigma: float = sigma) -> np.ndarray:
+    """
+    NoiseExtract as from Binghamton toolbox.
+    :param im: grayscale or color image, np.uint8
+    :param levels: number of wavelet decomposition levels
+    :param sigma: estimated noise power
+    :return: noise residual
+    """
+    im = np.array(im)
+
+    assert (im.dtype == np.uint8)
+    assert (im.ndim in [2, 3])
+
+    im = im.astype(np.float32)
+
+    noise_var = sigma ** 2
+
+    if im.ndim == 2:
+        im.shape += (1,)
+
+    W = np.zeros(im.shape, np.float32)
+
+    for ch in range(im.shape[2]):
+
+        wlet = None
+        while wlet is None and levels > 0:
+            try:
+                wlet = pywt.wavedec2(im[:, :, ch], 'db4', level=levels)
+            except ValueError:
+                levels -= 1
+                wlet = None
+        if wlet is None:
+            raise ValueError('Impossible to compute Wavelet filtering for input size: {}'.format(im.shape))
+
+        wlet_details = wlet[1:]
+
+        wlet_details_filter = [None] * len(wlet_details)
+        # Cycle over Wavelet levels 1:levels-1
+        for wlet_level_idx, wlet_level in enumerate(wlet_details):
+            # Cycle over H,V,D components
+            level_coeff_filt = [None] * 3
+            for wlet_coeff_idx, wlet_coeff in enumerate(wlet_level):
+                level_coeff_filt[wlet_coeff_idx] = wiener_adaptive(wlet_coeff, noise_var)
+            wlet_details_filter[wlet_level_idx] = tuple(level_coeff_filt)
+
+        # Set filtered detail coefficients for Levels > 0 ---
+        wlet[1:] = wlet_details_filter
+
+        # Set to 0 all Level 0 approximation coefficients ---
+        wlet[0][...] = 0
+
+        # Invert wavelet transform ---
+        wrec = pywt.waverec2(wlet, 'db4')
+        try:
+            W[:, :, ch] = wrec
+        except ValueError:
+            W = np.zeros(wrec.shape[:2] + (im.shape[2],), np.float32)
+            W[:, :, ch] = wrec
+
+    if W.shape[2] == 1:
+        W.shape = W.shape[:2]
+
+    W = W[:im.shape[0], :im.shape[1]]
+
+    return W
+  
 def loadtest(idx):
-  test_dir = 'Test_M_27'
+  test_dir = 'TEST DIRECTORY PATH'
 
   path_images = glob.glob(test_dir + '/D*.jpg')
   path_images = sorted(path_images)
