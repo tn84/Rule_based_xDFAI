@@ -1,4 +1,13 @@
-
+import numpy as np
+import pickle
+import math
+import os
+from Functions import load_result
+from Functions import save_result
+from Trace_Value_Extraction import test_top_value
+ 
+# Calculate NED and SED 
+# A is related to NED and B is associated with SED
 
 layers = model_layers
 Cmodels = class_name
@@ -6,8 +15,8 @@ shap_type = 'ch'  # none,ch
 mode= 'Gradient'  # Gradient, Deep, Grad-CAM
 prc=0.05
 path="Results/All_Outputs/Model-"
-M= "target class for the sample test"
-test_path = f"Results/All_Outputs/Model-{M}/Test_Activation-{M}"
+c= "target class for the sample test" #string
+test_path = f"Results/All_Outputs/Model-{c}/Test_Activation-{c}"
 Method = 'Euclidean' # Euclidean , Static
 
 with open(test_path+'/Ground_truth.pkl', 'rb') as file:
@@ -91,19 +100,19 @@ for m, model in enumerate(Cmodels):
         percent_sampleB.insert(i,[0,model])
 
     count_layerA.insert(l,count_sampleA)
-    percent_layerA.insert(l,percent_sampleA) # Keep percent and model of all layers for current model
+    percent_layerA.insert(l,percent_sampleA) # Keep the percent and model of all layers for the current model
 
     count_layerB.insert(l,count_sampleB)
-    percent_layerB.insert(l,percent_sampleB) # Keep percent and model of all layers for current model
+    percent_layerB.insert(l,percent_sampleB) # Keep the percent and model of all layers for the current model
 
   count_modelA.insert(m,count_layerA)
-  percent_modelA.insert(m,percent_layerA) # Keep percent and model of all models
+  percent_modelA.insert(m,percent_layerA) # Keep the percent and model of all models
 
   count_modelB.insert(m,count_layerB)
-  percent_modelB.insert(m,percent_layerB) # Keep percent and model of all models
+  percent_modelB.insert(m,percent_layerB) # Keep the percent and model of all models
 
 # save results
-save_result(count_modelA,path+f"{M}/Results/{Method}/count_model-7A-less.pickle")
-save_result(percent_modelA,path+f"{M}/Results/{Method}/percent_model-7A-less.pickle")
-save_result(count_modelB,path+f"{M}/Results/{Method}/count_model-7B-less.pickle")
-save_result(percent_modelB,path+f"{M}/Results/{Method}/percent_model-7B-less.pickle")
+save_result(count_modelA,path+f"{c}/Results/{Method}/count_model-7A-less.pickle")
+save_result(percent_modelA,path+f"{c}/Results/{Method}/percent_model-7A-less.pickle")
+save_result(count_modelB,path+f"{c}/Results/{Method}/count_model-7B-less.pickle")
+save_result(percent_modelB,path+f"{c}/Results/{Method}/percent_model-7B-less.pickle")
