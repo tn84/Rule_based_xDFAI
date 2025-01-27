@@ -12,4 +12,4 @@ For example: the number of classes, class names, paths, the number of layers, an
  5- Majority voting and model identification based on rules are performed by functions in Majority_Voting_Rules. <br />
 6- Finally, the results of the proposed framework will be visible in xDFAI.py. <br />
 
-The order of executing the modules is specified in  xDFAI.py.
+##### The order of executing the modules is specified in  xDFAI.py.
