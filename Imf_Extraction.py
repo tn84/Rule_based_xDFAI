@@ -1,14 +1,23 @@
+import torch
+import shap
+import numpy as np
+import pickle
+import os
+
+from Functions import loadtrain
+from Functions import loadtest
+from Functions import loadmodel
+
 # Extract important features and activation values
 
 ## Find important features
 
 # Need to update your model layers
-layers=["List of your model layers"] # e.g. layers=['conv1','conv2','conv3','conv4','fcn5','fcn6','fcn7']
 
 # Choose a batch of 100 samples from input_image_4D
 batch_size = 100
 
-for c in range(num_classes)
+for c in range(class_name)
   c = str(c)
   input_image_4D, num_samples = loadtrain(c)
   model=loadmodel()
@@ -18,7 +27,7 @@ for c in range(num_classes)
     end_index = min(start_index + batch_size, num_samples)
     input_image_4D_batch = input_image_4D[start_index:end_index]
 
-    for layer in layers:
+    for layer in model_layers:
       layer_name = getattr(model, layer)
       explainer = shap.GradientExplainer((model,layer_name), data=background_images, batch_size=1)
       Grad_shap_values, Grad_indexes = explainer.shap_values(input_image_4D_batch, ranked_outputs=1)
@@ -34,8 +43,8 @@ for c in range(num_classes)
   count=0
   for _, _, files in os.walk('Results/Model-'+c+'/Gradient/batches'):
     count += len(files)
-  batch_no = int(count/(2*len(layers)))
-  for layer in layers:
+  batch_no = int(count/(2*len(model_layers)))
+  for layer in model_layers:
     Grad_shap = []
     Grad_index = []
     for batch in range(1,batch_no+1):
@@ -54,6 +63,7 @@ for c in range(num_classes)
       print("Incorrect indices in model",c)
     np.save('Results/Model-'+c+'/Gradient/shap_'+layer+'.npy', combined_shap)
     print(layer,np.shape(combined_shap))
+    
   del shap,Grad_shap,Grad_index,combined_shap,combined_index
 
 ################################################################################
@@ -66,8 +76,8 @@ def get_activation(name):
     return hook
 
 
-for c in range(num_classes)
-
+for c in range(class_name)
+  c = str(c)
   input_image_4D, num_samples = loadtrain(c)
 
   for start_index in range(0, num_samples, batch_size):
@@ -90,7 +100,7 @@ for c in range(num_classes)
 
   # Extract activation for each layer across all training images
 
-    for i,layer in enumerate(layers):
+    for i, layer in enumerate(model_layers):
       Feature_map_values = [value.cpu().numpy() for key, value in activation_All.items() if key.endswith(layer)]
       Feature_map_values = np.array(Feature_map_values)
       # If the layers are convolutions (we have had 5 convolution layers)
