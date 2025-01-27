@@ -1,4 +1,3 @@
-# 7A 7B -2
 
 
 layers = model_layers
