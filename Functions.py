@@ -90,3 +90,35 @@ def std_2():
   print("Standard Deviation of the top values of all training images:", np.shape(Std_top_value))
 
   return Std_top_value
+
+
+####################################
+# Save print() outputs
+
+class OutputToFile:
+    def __init__(self, filename):
+        self.file = open(filename, 'w')
+        self.stdout = sys.stdout
+
+    def write(self, text):
+        self.file.write(text)
+        self.stdout.write(text)
+
+    def flush(self):
+        self.file.flush()
+        self.stdout.flush()
+########################################
+# Save results
+
+def save_result(data,dir):
+  with open(dir, 'wb') as f:
+      pickle.dump(data, f)
+########################################
+# Load results
+
+def load_result(dir):
+  with open(dir, 'rb') as f:
+      data = pickle.load(f)
+
+  return data
+
