@@ -1,6 +1,6 @@
 # Rule_based_xDFAI
 
-## Important notes:
+## Important note:
 Set the required initial values based on your model.
 For example: the number of classes, class names, paths, the number of layers, and layer names.
 
