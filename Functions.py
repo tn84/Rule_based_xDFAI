@@ -9,7 +9,7 @@ import pickle
 
 
 prnu = transforms.Compose([
-    transforms.Resize((resize , resize)),
+    transforms.Resize((320 , 320)),
     transforms.Lambda(noise_extract),
     transforms.ToTensor(),
 ])
