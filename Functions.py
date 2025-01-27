@@ -1,3 +1,5 @@
+# Generate a specific input image for SHAP explanations from "Test dataset"
+
 def loadtest(idx):
   test_dir = 'Test_M_27'
 
@@ -24,7 +26,7 @@ def loadtest(idx):
 
   return input_image_4D, Ground_truth
 
-
+###################################################################################
 
 # Generate a specific input image for SHAP explanations from "Train dataset"
 def loadtrain(model_no,idx1,idx2):
@@ -66,3 +68,25 @@ print(background_images.shape)
 
 # Move to GPU
 background_images = background_images.to(device)
+
+
+############################################
+# Calculate the std of all N top indices across all training images for all layers
+
+def std_2():
+
+  Std_top_value=[]
+  shap = np.transpose(shap_top_values, (1, 0))
+
+  for i in range(len(activation_top_values)):
+    mask = shap[i] > 0
+    indices = np.nonzero(mask)
+
+    # Apply the mask to select items with positive SHAP
+    new_activation_top_values = [activation_top_values[i][x] for x in indices[0]]
+    std =  np.std(new_activation_top_values)
+    Std_top_value.append(std)
+
+  print("Standard Deviation of the top values of all training images:", np.shape(Std_top_value))
+
+  return Std_top_value
