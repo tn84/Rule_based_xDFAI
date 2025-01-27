@@ -1,3 +1,5 @@
+#Train dataset:
+
 # Extract the values of all N_top indices overall of all camera models regarding a specific layer for the training dataset
 def train_top_value(layer,c):
 
@@ -51,6 +53,7 @@ def train_top_value(layer,c):
 
 
 #################################################
+#Test dataset:
 
 # Extract the values of all N_top indices overall of all camera models regarding a specific layer for the test sample
 def test_top_value(layer,dir):
