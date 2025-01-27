@@ -1,6 +1,8 @@
+import numpy as np
+from collections import Counter
+
 # Finding Traces
 # Saving SHAP of all layers
-layers_conv = ["List of your model convolution layers"] # e.g. layers=['conv1','conv2','conv3','conv4']
 
 def N_top_func(layer,c):
 
