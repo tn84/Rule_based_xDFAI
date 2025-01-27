@@ -1,5 +1,6 @@
 import numpy as np
 from collections import Counter
+from functools import reduce
 
 # Finding Traces
 # Saving SHAP of all layers
