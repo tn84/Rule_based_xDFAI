@@ -6,6 +6,7 @@ import numpy as np
 import pickle
 import torch
 import torch.nn as nn
+from Function import std_2
 import Imf_Extraction ImfExtrat
 from Trace_Detection import N_top_func
 from Trace_Detection import N_top_indices
@@ -41,6 +42,7 @@ for layer in model_layers:
   sorted_shap_top_indexes, shap_top_value, common_indices_flats = N_top_indices(layer,N_top_count)
    activation_top_value = train_top_value(layer,c)
    test_top_value = test_top_value(layer,'TEST DIR')
+   Std_top_value = std_2()
    NED_SED(c, 'TEST Activation DIR')
 
 # Majority Voting
